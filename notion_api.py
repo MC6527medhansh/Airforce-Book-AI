@@ -1,13 +1,15 @@
 import os
+from dotenv import load_dotenv
 from notion_client import Client
+
+load_dotenv()
 
 notion = Client(auth=os.getenv("NOTION_TOKEN"))
 DATABASE_ID = os.getenv("NOTION_DATABASE_ID")
 
-
-def push_to_notion(title, section, subsection, content):
+def push_to_notion(title: str, section: str, subsection: str, content: str) -> None:
     """
-    Creates a new page in your Notion database with the given fields.
+    Pushes a single subsection as a new page in the Notion database.
     """
     notion.pages.create(
         parent={"database_id": DATABASE_ID},
@@ -19,6 +21,6 @@ def push_to_notion(title, section, subsection, content):
         children=[{
             "object": "block",
             "type": "paragraph",
-            "paragraph": {"rich_text": [{"text": {"content": content}}]}
+            "paragraph": {"rich_text": [{"type":"text", "text": {"content": content}}]}
         }]
     )
